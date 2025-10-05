@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectFlow - Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #7e57c2;
+            --primary-dark: #5e35b1;
+            --primary-light: #b39ddb;
+            --accent-color: #e1bee7;
+            --text-dark: #333;
+            --text-light: #666;
+            --background: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Purple Liquid Lava Animation Background */
+        .lava-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .lava-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #5e35b1, #7e57c2, #9575cd, #b39ddb);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        .lava-blob {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(126, 87, 194, 0.8), rgba(179, 157, 219, 0.6));
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: lavaMove 15s infinite ease-in-out;
+        }
+
+        .lava-blob:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+            background: linear-gradient(45deg, rgba(94, 53, 177, 0.7), rgba(126, 87, 194, 0.5));
+        }
+
+        .lava-blob:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            right: -50px;
+            animation-delay: -5s;
+            background: linear-gradient(45deg, rgba(126, 87, 194, 0.6), rgba(149, 117, 205, 0.4));
+        }
+
+        .lava-blob:nth-child(3) {
+            width: 600px;
+            height: 600px;
+            bottom: -150px;
+            left: 30%;
+            animation-delay: -10s;
+            background: linear-gradient(45deg, rgba(149, 117, 205, 0.5), rgba(179, 157, 219, 0.3));
+        }
+
+        .lava-blob:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            top: 20%;
+            left: 60%;
+            animation-delay: -7s;
+            background: linear-gradient(45deg, rgba(94, 53, 177, 0.6), rgba(126, 87, 194, 0.4));
+        }
+
+        .lava-blob:nth-child(5) {
+            width: 450px;
+            height: 450px;
+            bottom: 10%;
+            right: 20%;
+            animation-delay: -12s;
+            background: linear-gradient(45deg, rgba(126, 87, 194, 0.5), rgba(149, 117, 205, 0.3));
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes lavaMove {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            25% {
+                transform: translate(50px, -30px) scale(1.1);
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+            }
+            50% {
+                transform: translate(0, -50px) scale(0.9);
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            }
+            75% {
+                transform: translate(-50px, 30px) scale(1.05);
+                border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
+            }
+        }
+
+        /* Enhanced floating particles */
+        .lava-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            width: 8px;
+            height: 8px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 12px;
+            height: 12px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 6px;
+            height: 6px;
+            top: 80%;
+            left: 20%;
+            animation-delay: -4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 10px;
+            height: 10px;
+            top: 40%;
+            left: 90%;
+            animation-delay: -6s;
+        }
+
+        .particle:nth-child(5) {
+            width: 7px;
+            height: 7px;
+            top: 10%;
+            left: 70%;
+            animation-delay: -8s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0b2e, #2d1b69);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Sign-up Page Styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .auth-form {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.2);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            text-align: center;
+            color: var(--text-light);
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 5px 10px;
+            }
+
+            .user-actions {
+                margin-top: 15px;
+            }
+            
+            .auth-form {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Purple Liquid Lava Background -->
+    <div class="lava-background">
+        <div class="lava-container">
+            <div class="lava-blob"></div>
+            <div class="lava-blob"></div>
+            <div class="lava-blob"></div>
+            <div class="lava-blob"></div>
+            <div class="lava-blob"></div>
+        </div>
+        <div class="lava-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-project-diagram"></i>
+                    ProjectFlow
+                </div>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="signup.html" class="active">Sign Up</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="login-btn">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Sign-up Page -->
+            <section id="signup-page">
+                <div class="auth-container">
+                    <div class="auth-form">
+                        <h2>Create an Account</h2>
+                        <form id="signup-form">
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" id="fullname" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm Password</label>
+                                <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+                        </form>
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="#" id="login-link">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 ProjectFlow. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                // Simple validation
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                // Store user data in localStorage
+                const userData = {
+                    fullname: fullname,
+                    email: email,
+                    password: password
+                };
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // Show success message and redirect to home page
+                alert(`Account created successfully for ${fullname}!`);
+                window.location.href = 'home.html';
+            });
+            
+            // Login button functionality
+            document.getElementById('login-btn').addEventListener('click', function() {
+                alert('Redirecting to login page...');
+                // In a real app, you would redirect to login page
+            });
+            
+            document.getElementById('login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Redirecting to login page...');
+                // In a real app, you would redirect to login page
+            });
+        });
+    </script>
+</body>
+</html>

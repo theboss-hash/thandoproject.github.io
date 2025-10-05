@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectFlow - Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #7e57c2;
+            --primary-dark: #5e35b1;
+            --primary-light: #b39ddb;
+            --accent-color: #e1bee7;
+            --text-dark: #333;
+            --text-light: #666;
+            --background: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Sign-up Page Styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .auth-form {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            color: var(--text-light);
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 5px 10px;
+            }
+
+            .user-actions {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-project-diagram"></i>
+                    ProjectFlow
+                </div>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="signup.html" class="active">Sign Up</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="login-btn">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Sign-up Page -->
+            <section id="signup-page">
+                <div class="auth-container">
+                    <div class="auth-form">
+                        <h2>Create an Account</h2>
+                        <form id="signup-form">
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" id="fullname" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm Password</label>
+                                <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+                        </form>
+                        <div class="auth-footer">
+                            <p>Already have an account? <a href="#" id="login-link">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 ProjectFlow. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                // Simple validation
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                // Store user data in localStorage
+                const userData = {
+                    fullname: fullname,
+                    email: email,
+                    password: password
+                };
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // Show success message and redirect to home page
+                alert(`Account created successfully for ${fullname}!`);
+                window.location.href = 'home.html';
+            });
+            
+            // Login button functionality
+            document.getElementById('login-btn').addEventListener('click', function() {
+                alert('Redirecting to login page...');
+                // In a real app, you would redirect to login page
+            });
+            
+            document.getElementById('login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Redirecting to login page...');
+                // In a real app, you would redirect to login page
+            });
+        });
+    </script>
+</body>
+</html>

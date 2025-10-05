@@ -1,0 +1,109 @@
+<script>
+    // Flying Hearts Animation
+    const heartsContainer = document.getElementById('heartsContainer');
+    const liveLikeBtn = document.getElementById('liveLikeBtn');
+    const celebration = document.getElementById('celebration');
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        
+        // Random position
+        const startPosition = Math.random() * 100;
+        heart.style.left = `${startPosition}%`;
+        
+        // Random size
+        const size = 16 + Math.random() * 24;
+        heart.style.fontSize = `${size}px`;
+        
+        // Random animation delay
+        heart.style.animationDelay = `${Math.random() * 2}s`;
+        
+        heartsContainer.appendChild(heart);
+        
+        // Remove heart after animation completes
+        setTimeout(() => {
+            heart.remove();
+        }, 8000);
+    }
+
+    function createMultipleHearts(count) {
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                createHeart();
+            }, i * 100);
+        }
+    }
+
+    function createConfetti() {
+        celebration.innerHTML = '';
+        celebration.classList.add('active');
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            
+            // Random position and properties
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.animationDelay = `${Math.random() * 2}s`;
+            confetti.style.width = `${5 + Math.random() * 10}px`;
+            confetti.style.height = `${5 + Math.random() * 10}px`;
+            
+            celebration.appendChild(confetti);
+        }
+        
+        // Hide celebration after animation
+        setTimeout(() => {
+            celebration.classList.remove('active');
+        }, 5000);
+    }
+
+    // Event Listeners
+    liveLikeBtn.addEventListener('click', function() {
+        createMultipleHearts(5);
+        
+        // Occasionally trigger celebration
+        if (Math.random() < 0.3) {
+            createConfetti();
+        }
+        
+        // Button feedback
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+
+    // Auto-generate some hearts occasionally
+    setInterval(() => {
+        if (Math.random() < 0.1) { // 10% chance every 5 seconds
+            createHeart();
+        }
+    }, 5000);
+
+    // Progress bar animation on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const targetWidth = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = targetWidth;
+            }, 500);
+        });
+        
+        // Initial hearts
+        setTimeout(() => {
+            createMultipleHearts(3);
+        }, 1000);
+    });
+
+    // Simulate work update with celebration
+    document.getElementById('simulate-update-btn').addEventListener('click', function() {
+        // Trigger celebration when simulating work
+        setTimeout(() => {
+            createMultipleHearts(8);
+            createConfetti();
+        }, 1000);
+    });
+</script>

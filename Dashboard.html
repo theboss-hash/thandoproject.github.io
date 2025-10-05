@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GROUP PROJECT ORGANIZER - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #7e57c2;
+            --primary-dark: #5e35b1;
+            --primary-light: #b39ddb;
+            --accent-color: #e1bee7;
+            --text-dark: #333;
+            --text-light: #666;
+            --background: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+
+        /* Project Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: var(--text-light);
+        }
+
+        .progress-section {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .progress-section h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .progress-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .project-attributes {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .chart-container {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .key-dates {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .key-dates h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .date-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .date-item:last-child {
+            border-bottom: none;
+        }
+
+        .date-title {
+            font-weight: 500;
+        }
+
+        .date-value {
+            color: var(--text-light);
+        }
+
+        .date-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            color: var(--text-light);
+            border-top: 1px solid #eee;
+        }
+
+        /* Member Chat Styles */
+        .chat-section {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chat-section h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-container {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            position: relative;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.sent {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.received {
+            background-color: #e9ecef;
+            color: var(--text-dark);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .message-content {
+            word-wrap: break-word;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .send-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .send-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .send-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            padding: 5px 15px;
+            font-style: italic;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .member-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .member-tag {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 5px 10px;
+            }
+
+            .user-actions {
+                margin-top: 15px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dashboard-header .btn {
+                margin-top: 15px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-project-diagram"></i>
+                    GROUP PROJECT ORGANIZER
+                </div>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="thando.html">Sign Up</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn btn-outline" id="login-btn">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Project Dashboard -->
+            <section id="dashboard-page">
+                <div class="dashboard-header">
+                    <h1>Project Dashboard</h1>
+                    <div>
+                        <button class="btn btn-outline" id="edit-stats-btn">Edit Stats</button>
+                        <button class="btn btn-primary" id="simulate-update-btn">Simulate Work Update</button>
+                    </div>
+                </div>
+
+                <div class="project-stats">
+                    <div class="stat-card">
+                        <h3 id="active-projects-count">0</h3>
+                        <p>Active Projects</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="team-members-count">0</h3>
+                        <p>Team Members</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="overall-progress">0%</h3>
+                        <p>Overall Progress</p>
+                        <button class="btn btn-outline btn-small" id="overall-progress-btn">View Details</button>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="upcoming-deadlines">0</h3>
+                        <p>Upcoming Deadlines</p>
+                        <button class="btn btn-outline btn-small" id="upcoming-deadlines-btn">View All</button>
+                    </div>
+                </div>
+
+                <!-- Member Chat Section -->
+                <div class="chat-section">
+                    <h2>
+                        <span>Team Chat</span>
+                        <span id="online-count">0 online</span>
+                    </h2>
+                    
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <i class="fas fa-users"></i> Project Team Discussion
+                        </div>
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages will be loaded here -->
+                        </div>
+                        <div class="typing-indicator" id="typing-indicator">
+                            Someone is typing...
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Type your message here...">
+                            <button class="send-button" id="send-button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="member-list" id="member-list">
+                        <!-- Team members will be listed here -->
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h2>Project Progress</h2>
+                    <div id="progress-container">
+                        <!-- Progress items will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Progress Overview</h2>
+                    <canvas id="progress-chart"></canvas>
+                </div>
+
+                <div class="key-dates">
+                    <div class="dashboard-header">
+                        <h2>Key Dates</h2>
+                        <button class="btn btn-primary" id="add-date-btn">Add Date</button>
+                    </div>
+                    <div id="dates-container">
+                        <!-- Date items will be dynamically added here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Edit Stats Modal -->
+    <div class="modal" id="edit-stats-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="close-edit-stats">&times;</button>
+            <div class="modal-header">
+                <h2>Edit Dashboard Statistics</h2>
+            </div>
+            <form id="edit-stats-form">
+                <div class="form-group">
+                    <label for="active-projects-input">Active Projects</label>
+                    <input type="number" id="active-projects-input" class="form-control" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="team-members-input">Team Members</label>
+                    <input type="number" id="team-members-input" class="form-control" min="0">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Update Statistics</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overall Progress Modal -->
+    <div class="modal" id="overall-progress-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="modal-close" id="close-overall-progress">&times;</button>
+            <div class="modal-header">
+                <h2>Overall Progress Breakdown</h2>
+            </div>
+            <div id="overall-progress-content">
+                <!-- Progress breakdown will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Deadlines Modal -->
+    <div class="modal" id="upcoming-deadlines-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="modal-close" id="close-upcoming-deadlines">&times;</button>
+            <div class="modal-header">
+                <h2>Upcoming Deadlines</h2>
+            </div>
+            <div id="upcoming-deadlines-content">
+                <!-- Deadlines will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Date Modal -->
+    <div class="modal" id="add-date-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="close-add-date">&times;</button>
+            <div class="modal-header">
+                <h2>Add Key Date</h2>
+            </div>
+            <form id="add-date-form">
+                <div class="form-group">
+                    <label for="date-title">Date Title</label>
+                    <input type="text" id="date-title" class="form-control" placeholder="Enter date title" required>
+                </div>
+                <div class="form-group">
+                    <label for="date-value">Date</label>
+                    <input type="date" id="date-value" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Date</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GROUP PROJECT ORGANISER. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data storage
+        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+        let keyDates = JSON.parse(localStorage.getItem('keyDates')) || [];
+        let dashboardStats = JSON.parse(localStorage.getItem('dashboardStats')) || {
+            activeProjects: 0,
+            teamMembers: 0
+        };
+
+        // Chat functionality
+        let chatMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+        let currentUser = localStorage.getItem('currentUser') || 'You';
+        let teamMembers = JSON.parse(localStorage.getItem('teamMembers')) || [
+            { name: 'Alex Johnson', role: 'Project Manager', online: true },
+            { name: 'Sam Wilson', role: 'Developer', online: true },
+            { name: 'Taylor Smith', role: 'Designer', online: false },
+            { name: 'Jordan Lee', role: 'QA Tester', online: true }
+        ];
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard page loaded');
+            
+            // Set up all button event listeners
+            setupButtonEventListeners();
+            
+            // Set up modal closures
+            setupModalClosures();
+            
+            // Set up form handlers
+            setupFormHandlers();
+            
+            // Set up chat functionality
+            setupChat();
+            
+            // Load and refresh dashboard data
+            refreshDashboard();
+        });
+
+        function setupButtonEventListeners() {
+            // Edit Stats Button
+            document.getElementById('edit-stats-btn').addEventListener('click', function() {
+                console.log('Edit stats button clicked');
+                openEditStatsModal();
+            });
+
+            // Overall Progress Button
+            document.getElementById('overall-progress-btn').addEventListener('click', function() {
+                console.log('Overall progress button clicked');
+                showOverallProgressDetails();
+            });
+
+            // Upcoming Deadlines Button
+            document.getElementById('upcoming-deadlines-btn').addEventListener('click', function() {
+                console.log('Upcoming deadlines button clicked');
+                showUpcomingDeadlines();
+            });
+
+            // Add Date Button
+            document.getElementById('add-date-btn').addEventListener('click', function() {
+                console.log('Add date button clicked');
+                document.getElementById('add-date-modal').classList.add('active');
+            });
+
+            // Simulate Update Button
+            document.getElementById('simulate-update-btn').addEventListener('click', function() {
+                console.log('Simulate update button clicked');
+                simulateWorkUpdate();
+            });
+
+            // Login Button
+            document.getElementById('login-btn').addEventListener('click', function() {
+                alert('Redirecting to login page...');
+            });
+        }
+
+        function setupModalClosures() {
+            // Close buttons for all modals
+            const modals = [
+                'edit-stats', 'overall-progress', 'upcoming-deadlines', 'add-date'
+            ];
+            
+            modals.forEach(modal => {
+                document.getElementById(`close-${modal}`).addEventListener('click', function() {
+                    document.getElementById(`${modal}-modal`).classList.remove('active');
+                });
+            });
+
+            // Close modal when clicking outside
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        function setupFormHandlers() {
+            // Edit Stats Form
+            document.getElementById('edit-stats-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateDashboardStats();
+            });
+
+            // Add Date Form
+            document.getElementById('add-date-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewDate();
+            });
+        }
+
+        function setupChat() {
+            const chatInput = document.getElementById('chat-input');
+            const sendButton = document.getElementById('send-button');
+            const chatMessagesContainer = document.getElementById('chat-messages');
+            
+            // Load existing messages
+            loadChatMessages();
+            
+            // Update member list
+            updateMemberList();
+            
+            // Send message on button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Enable/disable send button based on input
+            chatInput.addEventListener('input', function() {
+                sendButton.disabled = chatInput.value.trim() === '';
+            });
+            
+            // Simulate typing indicator
+            chatInput.addEventListener('focus', function() {
+                // Randomly show typing indicator when user focuses on input
+                if (Math.random() > 0.7) {
+                    showTypingIndicator();
+                }
+            });
+        }
+
+        function loadChatMessages() {
+            const chatMessagesContainer = document.getElementById('chat-messages');
+            chatMessagesContainer.innerHTML = '';
+            
+            if (chatMessages.length === 0) {
+                // Add welcome message if no messages exist
+                const welcomeMessage = {
+                    id: Date.now(),
+                    sender: 'System',
+                    content: 'Welcome to the team chat! Start a conversation with your team members.',
+                    timestamp: new Date(),
+                    type: 'system'
+                };
+                chatMessages.push(welcomeMessage);
+                localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+            }
+            
+            chatMessages.forEach(message => {
+                addMessageToChat(message, false);
+            });
+            
+            // Scroll to bottom
+            scrollToBottom();
+        }
+
+        function addMessageToChat(message, animate = true) {
+            const chatMessagesContainer = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            
+            // Format timestamp
+            const timeString = new Date(message.timestamp).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            if (message.type === 'system') {
+                messageElement.className = 'message system';
+                messageElement.innerHTML = `
+                    <div class="message-content" style="text-align: center; font-style: italic;">
+                        ${message.content}
+                    </div>
+                `;
+            } else {
+                const isSentByUser = message.sender === currentUser;
+                messageElement.className = `message ${isSentByUser ? 'sent' : 'received'}`;
+                
+                messageElement.innerHTML = `
+                    <div class="message-header">
+                        <span>${message.sender}</span>
+                        <span>${timeString}</span>
+                    </div>
+                    <div class="message-content">
+                        ${message.content}
+                    </div>
+                `;
+            }
+            
+            if (animate) {
+                messageElement.style.opacity = '0';
+                chatMessagesContainer.appendChild(messageElement);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    messageElement.style.opacity = '1';
+                }, 10);
+            } else {
+                chatMessagesContainer.appendChild(messageElement);
+            }
+            
+            scrollToBottom();
+        }
+
+        function sendMessage() {
+            const chatInput = document.getElementById('chat-input');
+            const messageContent = chatInput.value.trim();
+            
+            if (messageContent === '') return;
+            
+            // Create message object
+            const message = {
+                id: Date.now(),
+                sender: currentUser,
+                content: messageContent,
+                timestamp: new Date(),
+                type: 'user'
+            };
+            
+            // Add to chat
+            chatMessages.push(message);
+            localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+            
+            // Add to UI
+            addMessageToChat(message);
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Disable send button
+            document.getElementById('send-button').disabled = true;
+            
+            // Show "Message Sent" notification
+            showMessageSentNotification();
+            
+            // Simulate a response after a delay (for demo purposes)
+            simulateResponse(messageContent);
+        }
+
+        function showMessageSentNotification() {
+            const sendButton = document.getElementById('send-button');
+            const originalHTML = sendButton.innerHTML;
+            
+            // Change button to show sent state
+            sendButton.innerHTML = '<i class="fas fa-check"></i>';
+            sendButton.style.backgroundColor = 'var(--success)';
+            
+            // Revert after 2 seconds
+            setTimeout(() => {
+                sendButton.innerHTML = originalHTML;
+                sendButton.style.backgroundColor = '';
+            }, 2000);
+        }
+
+        function simulateResponse(userMessage) {
+            // Only respond to some messages to make it more realistic
+            if (Math.random() > 0.5) return;
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Generate a response after a delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                // Select a random team member who is online
+                const onlineMembers = teamMembers.filter(member => 
+                    member.online && member.name !== currentUser
+                );
+                
+                if (onlineMembers.length === 0) return;
+                
+                const responder = onlineMembers[Math.floor(Math.random() * onlineMembers.length)];
+                const responses = [
+                    "That's a great point!",
+                    "I agree with you on that.",
+                    "Let me check on that and get back to you.",
+                    "Thanks for the update!",
+                    "Can you provide more details about that?",
+                    "I'll look into it right away.",
+                    "That's exactly what I was thinking too.",
+                    "Let's discuss this in our next meeting."
+                ];
+                
+                const responseContent = responses[Math.floor(Math.random() * responses.length)];
+                
+                const responseMessage = {
+                    id: Date.now(),
+                    sender: responder.name,
+                    content: responseContent,
+                    timestamp: new Date(),
+                    type: 'user'
+                };
+                
+                // Add to chat
+                chatMessages.push(responseMessage);
+                localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+                
+                // Add to UI
+                addMessageToChat(responseMessage);
+            }, 2000 + Math.random() * 3000); // Random delay between 2-5 seconds
+        }
+
+        function showTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            typingIndicator.classList.add('active');
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            typingIndicator.classList.remove('active');
+        }
+
+        function scrollToBottom() {
+            const chatMessagesContainer = document.getElementById('chat-messages');
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+
+        function updateMemberList() {
+            const memberListContainer = document.getElementById('member-list');
+            const onlineCount = teamMembers.filter(member => member.online).length;
+            
+            // Update online count
+            document.getElementById('online-count').textContent = `${onlineCount} online`;
+            
+            // Clear member list
+            memberListContainer.innerHTML = '';
+            
+            // Add members to list
+            teamMembers.forEach(member => {
+                const memberElement = document.createElement('div');
+                memberElement.className = 'member-tag';
+                memberElement.innerHTML = `
+                    <i class="fas ${member.online ? 'fa-circle' : 'fa-circle'}"></i>
+                    ${member.name}
+                `;
+                
+                // Set color based on online status
+                if (member.online) {
+                    memberElement.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+                    memberElement.style.color = '#2e7d32';
+                } else {
+                    memberElement.style.backgroundColor = 'rgba(158, 158, 158, 0.2)';
+                    memberElement.style.color = '#616161';
+                }
+                
+                memberListContainer.appendChild(memberElement);
+            });
+        }
+
+        // Dashboard Functions
+        function refreshDashboard() {
+            console.log('Refreshing dashboard with projects:', projects);
+            
+            // Update statistics from actual project data
+            updateStatisticsFromProjects();
+            
+            // Update progress items
+            refreshProgressItems();
+            
+            // Update charts
+            refreshCharts();
+            
+            // Update key dates
+            refreshDatesList();
+        }
+
+        function updateStatisticsFromProjects() {
+            // Calculate real statistics from projects
+            const activeProjects = projects.length;
+            const teamMembers = calculateTotalTeamMembers();
+            const overallProgress = calculateOverallProgress();
+            const upcomingDeadlines = calculateUpcomingDeadlines();
+
+            // Update dashboard stats
+            document.getElementById('active-projects-count').textContent = activeProjects;
+            document.getElementById('team-members-count').textContent = teamMembers;
+            document.getElementById('overall-progress').textContent = overallProgress + '%';
+            document.getElementById('upcoming-deadlines').textContent = upcomingDeadlines;
+
+            // Update stored stats
+            dashboardStats.activeProjects = activeProjects;
+            dashboardStats.teamMembers = teamMembers;
+            localStorage.setItem('dashboardStats', JSON.stringify(dashboardStats));
+        }
+
+        function calculateTotalTeamMembers() {
+            let totalMembers = 0;
+            projects.forEach(project => {
+                if (project.team && project.team.trim() !== '') {
+                    const members = project.team.split(',').map(m => m.trim()).filter(m => m !== '');
+                    totalMembers += members.length;
+                }
+            });
+            return totalMembers;
+        }
+
+        function calculateOverallProgress() {
+            if (projects.length === 0) return 0;
+            
+            const totalProgress = projects.reduce((sum, project) => sum + (project.progress || 0), 0);
+            const averageProgress = Math.round(totalProgress / projects.length);
+            return averageProgress;
+        }
+
+        function calculateUpcomingDeadlines() {
+            const today = new Date();
+            const nextWeek = new Date(today);
+            nextWeek.setDate(today.getDate() + 7);
+            
+            return projects.filter(project => {
+                const deadline = new Date(project.deadline);
+                return deadline >= today && deadline <= nextWeek;
+            }).length;
+        }
+
+        function refreshProgressItems() {
+            const progressContainer = document.getElementById('progress-container');
+            progressContainer.innerHTML = '';
+
+            if (projects.length === 0) {
+                progressContainer.innerHTML = `
+                    <div class="progress-item" style="text-align: center; padding: 40px;">
+                        <p style="color: var(--text-light);">No projects found. Create projects on the home page first.</p>
+                        <button class="btn btn-primary" onclick="window.location.href='home.html'">
+                            Go to Home Page
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            projects.forEach(project => {
+                const progressItem = document.createElement('div');
+                progressItem.className = 'progress-item';
+                progressItem.innerHTML = `
+                    <div class="progress-header">
+                        <span><strong>${project.name}</strong></span>
+                        <span>${project.progress || 0}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${project.progress || 0}%"></div>
+                    </div>
+                    <div class="project-attributes">
+                        <p><strong>Team:</strong> ${project.team || 'No team assigned'}</p>
+                        <p><strong>Deadline:</strong> ${new Date(project.deadline).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        })}</p>
+                        <p><strong>Status:</strong> ${(project.progress || 0) === 100 ? 'Completed' : 'In Progress'}</p>
+                    </div>
+                `;
+                
+                progressContainer.appendChild(progressItem);
+            });
+        }
+
+        function refreshCharts() {
+            const ctx = document.getElementById('progress-chart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.progressChart) {
+                window.progressChart.destroy();
+            }
+
+            if (projects.length === 0) {
+                // Show empty state for chart
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#666';
+                ctx.textAlign = 'center';
+                ctx.fillText('No project data available', 300, 150);
+                return;
+            }
+
+            const projectNames = projects.map(p => p.name);
+            const progressData = projects.map(p => p.progress || 0);
+
+            window.progressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: projectNames,
+                    datasets: [{
+                        label: 'Progress %',
+                        data: progressData,
+                        backgroundColor: 'rgba(126, 87, 194, 0.7)',
+                        borderColor: 'rgba(126, 87, 194, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Progress Percentage'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Projects'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function refreshDatesList() {
+            const datesContainer = document.getElementById('dates-container');
+            datesContainer.innerHTML = '';
+
+            // Combine project deadlines and custom key dates
+            const allDates = [...keyDates];
+            
+            // Add project deadlines
+            projects.forEach(project => {
+                allDates.push({
+                    title: `${project.name} Deadline`,
+                    date: project.deadline,
+                    type: 'project'
+                });
+            });
+
+            // Sort by date
+            allDates.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (allDates.length === 0) {
+                datesContainer.innerHTML = `
+                    <div class="date-item" style="text-align: center;">
+                        <p style="color: var(--text-light);">No dates scheduled</p>
+                    </div>
+                `;
+                return;
+            }
+
+            allDates.forEach((date, index) => {
+                const dateItem = document.createElement('div');
+                dateItem.className = 'date-item';
+                
+                const formattedDate = new Date(date.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+
+                dateItem.innerHTML = `
+                    <div>
+                        <div class="date-title">${date.title}</div>
+                        <div class="date-value">${formattedDate}</div>
+                    </div>
+                    <div class="date-actions">
+                        ${date.type === 'project' ? 
+                            `<span style="color: var(--primary-color); font-size: 0.8rem;">Project</span>` :
+                            `<button class="btn btn-outline btn-small edit-date" data-index="${index}">Edit</button>
+                             <button class="btn btn-primary btn-small delete-date" data-index="${index}">Delete</button>`
+                        }
+                    </div>
+                `;
+                
+                datesContainer.appendChild(dateItem);
+            });
+
+            // Add event listeners for custom dates
+            document.querySelectorAll('.edit-date').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    editDate(index);
+                });
+            });
+
+            document.querySelectorAll('.delete-date').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteDate(index);
+                });
+            });
+        }
+
+        // Modal Functions
+        function openEditStatsModal() {
+            document.getElementById('active-projects-input').value = dashboardStats.activeProjects;
+            document.getElementById('team-members-input').value = dashboardStats.teamMembers;
+            document.getElementById('edit-stats-modal').classList.add('active');
+        }
+
+        function updateDashboardStats() {
+            const activeProjects = parseInt(document.getElementById('active-projects-input').value) || 0;
+            const teamMembers = parseInt(document.getElementById('team-members-input').value) || 0;
+
+            dashboardStats.activeProjects = activeProjects;
+            dashboardStats.teamMembers = teamMembers;
+            
+            localStorage.setItem('dashboardStats', JSON.stringify(dashboardStats));
+            
+            // Update display
+            document.getElementById('active-projects-count').textContent = activeProjects;
+            document.getElementById('team-members-count').textContent = teamMembers;
+            
+            document.getElementById('edit-stats-modal').classList.remove('active');
+            alert('Statistics updated successfully!');
+        }
+
+        function showOverallProgressDetails() {
+            const overallProgress = calculateOverallProgress();
+            const completedProjects = projects.filter(p => p.progress === 100).length;
+            const inProgressProjects = projects.filter(p => p.progress > 0 && p.progress < 100).length;
+            const notStartedProjects = projects.filter(p => p.progress === 0).length;
+
+            document.getElementById('overall-progress-content').innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: var(--primary-color); font-size: 2rem; margin-bottom: 10px;">${overallProgress}%</h3>
+                    <p>Average Progress Across All Projects</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                    <div style="text-align: center; padding: 15px; background: #f0f7ff; border-radius: var(--border-radius);">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #4caf50;">${completedProjects}</div>
+                        <div>Completed</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #fff7e6; border-radius: var(--border-radius);">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #ff9800;">${inProgressProjects}</div>
+                        <div>In Progress</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #ffe6e6; border-radius: var(--border-radius);">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #f44336;">${notStartedProjects}</div>
+                        <div>Not Started</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="margin-bottom: 15px; color: var(--primary-color);">Project Progress Breakdown</h4>
+                    ${projects.map(project => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                            <span>${project.name}</span>
+                            <span style="font-weight: bold; color: ${project.progress === 100 ? '#4caf50' : project.progress > 50 ? '#ff9800' : '#f44336'}">
+                                ${project.progress || 0}%
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('overall-progress-modal').classList.add('active');
+        }
+
+        function showUpcomingDeadlines() {
+            const today = new Date();
+            const nextMonth = new Date(today);
+            nextMonth.setMonth(today.getMonth() + 1);
+            
+            const upcomingDeadlines = projects.filter(project => {
+                const deadline = new Date(project.deadline);
+                return deadline >= today && deadline <= nextMonth;
+            }).sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+            document.getElementById('upcoming-deadlines-content').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Total Upcoming Deadlines:</strong> ${upcomingDeadlines.length}</p>
+                </div>
+                
+                ${upcomingDeadlines.length === 0 ? 
+                    '<p style="text-align: center; color: var(--text-light);">No upcoming deadlines in the next month.</p>' :
+                    upcomingDeadlines.map(project => {
+                        const deadline = new Date(project.deadline);
+                        const daysUntil = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                        const isUrgent = daysUntil <= 7;
+                        
+                        return `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 10px; background: ${isUrgent ? '#fff0f0' : '#f9f9f9'}; border-radius: var(--border-radius); border-left: 4px solid ${isUrgent ? '#f44336' : 'var(--primary-color)'};">
+                                <div>
+                                    <div style="font-weight: bold;">${project.name}</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-light);">
+                                        Due: ${deadline.toLocaleDateString('en-US', { 
+                                            year: 'numeric', 
+                                            month: 'long', 
+                                            day: 'numeric' 
+                                        })}
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: bold; color: ${isUrgent ? '#f44336' : 'var(--primary-color)'};">
+                                        ${daysUntil} day${daysUntil !== 1 ? 's' : ''} left
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">
+                                        Progress: ${project.progress || 0}%
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')
+                }
+            `;
+
+            document.getElementById('upcoming-deadlines-modal').classList.add('active');
+        }
+
+        function addNewDate() {
+            const title = document.getElementById('date-title').value;
+            const date = document.getElementById('date-value').value;
+
+            if (title && date) {
+                keyDates.push({ 
+                    title: title, 
+                    date: date,
+                    type: 'custom'
+                });
+                
+                localStorage.setItem('keyDates', JSON.stringify(keyDates));
+                refreshDatesList();
+                
+                document.getElementById('add-date-modal').classList.remove('active');
+                document.getElementById('add-date-form').reset();
+                
+                alert('Date added successfully!');
+            }
+        }
+
+        function editDate(index) {
+            const date = keyDates[index];
+            const newTitle = prompt('Enter new title:', date.title);
+            const newDate = prompt('Enter new date (YYYY-MM-DD):', date.date);
+
+            if (newTitle && newDate) {
+                keyDates[index].title = newTitle;
+                keyDates[index].date = newDate;
+                localStorage.setItem('keyDates', JSON.stringify(keyDates));
+                refreshDatesList();
+                alert('Date updated successfully!');
+            }
+        }
+
+        function deleteDate(index) {
+            if (confirm('Are you sure you want to delete this date?')) {
+                keyDates.splice(index, 1);
+                localStorage.setItem('keyDates', JSON.stringify(keyDates));
+                refreshDatesList();
+                alert('Date deleted successfully!');
+            }
+        }
+
+        function simulateWorkUpdate() {
+            // Update progress for all projects
+            projects.forEach(project => {
+                if (project.progress < 100) {
+                    project.progress = Math.min(project.progress + 10, 100);
+                }
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('projects', JSON.stringify(projects));
+            
+            // Refresh dashboard
+            refreshDashboard();
+            
+            alert('Work progress updated! All projects have been advanced by 10%.');
+        }
+    </script>
+</body>
+</html>
